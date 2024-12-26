@@ -20,6 +20,8 @@ if v[0] == 2:  # Python 2.x
     from Tkinter import *
     import tkFileDialog as filedialog  # Rename for consistency
 else:  # Python 3.x
+    from tkinter import *
+    from tkinter.font import Font
     from tkinter import filedialog
     
 root = Tk()  # Create Tkinter window with title in "" 
@@ -29,7 +31,7 @@ text = Text(root)   # Init text widget
 text.grid()    
 
 #def saveas():
-#       global text
+#       
 #       t = text.get("1.0", "end-1c")
 #       savelocation = tkFileDialog.asksaveasfilename()
 #       file1 = open(savelocation, "w+")
@@ -37,7 +39,7 @@ text.grid()
 #       file1.close()
 
 def saveas():
-    global text
+             # No need for global (text same hai, reassign nahi hoti uski value)
     t = text.get("1.0", "end-1c")  # Get all text from the widget
     savelocation = filedialog.asksaveasfilename(defaultextension=".txt",
                                                 filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
@@ -49,21 +51,36 @@ button = Button(root, text = "Save", command = saveas)
 button.grid()
 
 def FontHelvetica():                                    # Define the font classes
-        global text
+        
         text.config(font = "Helvetica")
         
 def FontCourier():
-        global text
+        
         text.config(font = "Courier")
 
-def FontCentruyGothic():
-        global text
+def FontCenturyGothic():
+        
         text.config(font = "Century Gothic")
         
 def FontCambria():
-        global text
-        text.config(font = "Cambria")
         
+        text.config(font = "Cambria")
+
+bold_font = Font(text, text.cget("font"))       # Gets current font
+bold_font.configure(weight = "bold")    # Configure text as bold
+
+def FormatBold():
+      current_font = text.cget("font")          # Gets current font
+      if str(current_font) == str(bold_font):           # If already bold, reset to normal else turn bold
+            text.config(font = ("Helvetica"))
+      else:
+            text.config(font = bold_font)  
+
+# Button for the bold toggle
+bold_button = Button(root, text = "Bold", command = FormatBold)
+bold_button.grid()
+
+
 font = Menubutton(root, text = "Font")
 font.grid()
 font.menu = Menu(font, tearoff = 0)
@@ -80,7 +97,7 @@ command = FontHelvetica)
 font.menu.add_checkbutton(label = "Cambria", variable = cambria,
 command = FontCambria)
 font.menu.add_checkbutton(label = "Century Gothic", variable = centurygothic,
-command = FontCentruyGothic)
+command = FontCenturyGothic)
 
    
 root.mainloop()     # Starts Tkinter event loop to keep window open
